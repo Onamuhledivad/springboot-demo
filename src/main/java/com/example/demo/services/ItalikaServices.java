@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.example.demo.models.ItalikaModel;
 import com.example.demo.repositories.ItalikaRepository;
 
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,39 +19,39 @@ public class ItalikaServices {
     //Metodos
 
     //Get All Productos
-    public ArrayList<ItalikaModel> obtenerProductos(){
-            return (ArrayList<ItalikaModel>) italikaRep.findAll();
+    public ArrayList<ItalikaModel> obtenerProductosService(){
+            //Procedure 
+            return italikaRep.getProductos();
     }
 
-    //Save Producto
-    public ItalikaModel nuevoProducto(ItalikaModel producto){
-        return italikaRep.save(producto);
+    //New Producto
+    //Insert Procedure
+    public void nuevoProductoService(ItalikaModel producto){
+        italikaRep.newProducto(producto.getSku(), producto.getFert(), producto.getModelo(), producto.getTipo(), producto.getNo_serie(), producto.getFecha() );
     }
 
     //Search by id
-    public Optional<ItalikaModel> buscarporID(Long id){
-        return italikaRep.findById(id);
+    public Optional<ItalikaModel> buscarporIdService(Long id){
+        //Procedure
+        return italikaRep.listProductobyId(id);
     }
 
     //Search by SKU
-    public ArrayList<ItalikaModel> buscarporSKU(String sku){
-        return italikaRep.findBySku(sku);
+    public ArrayList<ItalikaModel> buscarporSkuService(String sku){
+        //Procedure
+        return italikaRep.listProductobySku(sku);
     }
 
     //Search by Modelo
-    public ArrayList<ItalikaModel> buscarporModelo(String modelo){
-        return italikaRep.findByModelo(modelo);
+    public ArrayList<ItalikaModel> buscarporModeloService(String modelo){
+        //Procedure
+        return italikaRep.listProductobyModelo(modelo);
     }
 
     //Delete by ID
-    public boolean eliminarProducto(Long id){
-        try{
-            italikaRep.deleteById(id);
-            return true;
-        } catch(Exception err){
-            return false;
-        }
-
+    public void eliminarProductoService(Long id){
+            //Procedure
+            italikaRep.deleteProducto(id);
     }
     
     
