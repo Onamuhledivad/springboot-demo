@@ -7,6 +7,8 @@ import com.example.demo.models.ItalikaModel;
 import com.example.demo.services.ItalikaServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,46 +29,39 @@ public class ItalikaController {
 
     @GetMapping() //Peticion GET
     public ArrayList<ItalikaModel> obtenerProductos(){
-        return this.italikaService.obtenerProductos();
+        return this.italikaService.obtenerProductosService();
     }
 
-    @PostMapping //Peticion POST nuevo producto
-    public ItalikaModel guardarProducto(@RequestBody ItalikaModel producto){
-        return this.italikaService.nuevoProducto(producto);
+    @PostMapping() //Peticion POST nuevo producto
+    public ResponseEntity<String> insertProducto(@RequestBody ItalikaModel data){
+       italikaService.nuevoProductoService(data);  
+       return new ResponseEntity<>("Nuevo Producto Guardado", HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/{id}") //Peticion GET por ID
     public Optional<ItalikaModel> obtenerporId(@PathVariable("id") Long id){
-        return this.italikaService.buscarporID(id);
+        return this.italikaService.buscarporIdService(id);
     }
 
     @GetMapping("/query") //Peticion GET por SKU y Modelo
-    public ArrayList<ItalikaModel> obtenerporSKU(@RequestParam("tipo") String tipo, @RequestParam("buscar") String buscar){
+    public ArrayList<ItalikaModel> buscarProducto(@RequestParam("tipo") String tipo, @RequestParam("buscar") String buscar){
 
         switch (tipo) {
             case "sku":
-                return this.italikaService.buscarporSKU(buscar);
+                return this.italikaService.buscarporSkuService(buscar);
             case "modelo":
-                return this.italikaService.buscarporModelo(buscar);
+                return this.italikaService.buscarporModeloService(buscar);
             default:
                 return null;
         }
         
     }
 
-    // @GetMapping("/query") //Peticion GET por Modelo
-    // public Optional<ItalikaModel> obtenerporModelo(@RequestParam("modelo") String modelo){
-    //     
-    // }
 
     @DeleteMapping("/{id}") //Delete por ID
-    public String eliminarporID(@PathVariable("id") Long id){
-        boolean ok = this.italikaService.eliminarProducto(id);
-        if(ok){
-            return "Producto Eliminado";
-        } else {
-            return "Error al Eliminar Id: " + id;
-        }
+    public ResponseEntity<String> eliminarporID(@PathVariable("id") Long id){
+        italikaService.eliminarProductoService(id);
+        return new ResponseEntity<>("Producto Eliminado Correctamente", HttpStatus.OK);
     }
 
 
